@@ -1,6 +1,9 @@
+const form = document.querySelector('form')
 const amount = document.querySelector("#amount");
+const expense = document.querySelector('#expense')
+const category = document.querySelector('#category')
 
-amount.addEventListener("input", (event) => {
+amount.addEventListener("input", () => {
   let value = amount.value.replace(/\D*/g, "");
   value = Number(value) / 100
 
@@ -15,3 +18,18 @@ function formatCurrencyBrl(value) {
 
   return value
 }
+
+form.addEventListener('submit', (e) => {
+  e.preventDefault()
+
+  const newExpense = {
+    id: new Date().getTime(),
+    expense: expense.value,
+    category: {
+      id: category.value,
+      name: category.options[category.selectedIndex].text
+    },
+    amount: amount.value,
+    created_at: new Date(),
+  }
+})

@@ -66,8 +66,19 @@ function expenseAdd(newExpense) {
     li.append(categoryImg, expenseInfo, expenseAmount, removeIcon)    
     expenseItems.append(li)
 
+    countExpenseItems(expenseItems)
+
   } catch (err) {
     alert("Deu erro.");
     console.log(err);
   }
 }
+
+function countExpenseItems(expenseItemsList) {
+  const numberOfItems = expenseItemsList.querySelectorAll('li').length
+  document.querySelector('aside header p span').innerHTML = `${numberOfItems} despesas`
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  countExpenseItems(expenseItems)
+})

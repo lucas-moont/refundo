@@ -2,6 +2,7 @@ const form = document.querySelector("form");
 const amount = document.querySelector("#amount");
 const expense = document.querySelector("#expense");
 const category = document.querySelector("#category");
+const expenseItems = document.querySelector('ul')
 
 amount.addEventListener("input", () => {
   let value = amount.value.replace(/\D*/g, "");
@@ -38,15 +39,14 @@ form.addEventListener("submit", (e) => {
 
 function expenseAdd(newExpense) {
   try {
-    const ul = document.querySelector('ul')
     const li = document.createElement('li')
     const categoryImg = document.createElement('img')
     const expenseInfo = document.createElement('div')
     const removeIcon = document.createElement('img')
     const expenseInfoName = document.createElement('strong')
     const expenseInfoCategory = document.createElement('span')
+    const expenseAmount = document.createElement('span')
     
-    removeIcon.src = './img/remove.svg'
     categoryImg.setAttribute('src', `./img/${newExpense.category.id}.svg`)
     categoryImg.setAttribute('alt', `${newExpense.category.name}`)
 
@@ -56,9 +56,15 @@ function expenseAdd(newExpense) {
     expenseInfo.classList.add('expense-info')
     expenseInfo.append(expenseInfoName, expenseInfoCategory)
 
+    expenseAmount.classList.add('expense-amount')
+    expenseAmount.innerHTML = `<small>R$</small>${newExpense.amount.replace('R$ ', '')}`
+    
+    removeIcon.src = './img/remove.svg'
+    removeIcon.classList.add('remove-icon')
+
     li.classList.add('expense')
-    li.append(categoryImg, expenseInfo)    
-    ul.append(li)
+    li.append(categoryImg, expenseInfo, expenseAmount, removeIcon)    
+    expenseItems.append(li)
 
   } catch (err) {
     alert("Deu erro.");

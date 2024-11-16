@@ -3,6 +3,8 @@ const amount = document.querySelector("#amount");
 const expense = document.querySelector("#expense");
 const category = document.querySelector("#category");
 const expenseItems = document.querySelector('ul')
+let total = 0
+
 
 amount.addEventListener("input", () => {
   let value = amount.value.replace(/\D*/g, "");
@@ -67,6 +69,7 @@ function expenseAdd(newExpense) {
     expenseItems.append(li)
 
     countExpenseItems(expenseItems)
+    countTotalExpense()
 
   } catch (err) {
     alert("Deu erro.");
@@ -79,6 +82,28 @@ function countExpenseItems(expenseItemsList) {
   document.querySelector('aside header p span').innerHTML = `${numberOfItems} despesas`
 }
 
+function countTotalExpense(){
+  const expenseAmountArray = document.querySelectorAll('.expense-amount')
+  expenseAmountArray.forEach(item => {
+    let parcela = item.innerText
+    parcela = parcela.replace(/\D*/g, "");
+    
+    parcela = Number(parcela) / 100
+
+    total = total + parcela
+  })
+
+  const symbolBrl = document.createElement('small')
+  symbolBrl.innerText = 'R$'
+
+  total = formatCurrencyBrl(total).toUpperCase().replace('R$', '')
+
+  const expensesTotal = document.querySelector('.expenses-total')
+  expensesTotal.innerHTML = ''
+  expensesTotal.append(symbolBrl, total)
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   countExpenseItems(expenseItems)
+  countTotalExpense()
 })

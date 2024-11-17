@@ -75,6 +75,7 @@ function expenseAdd(newExpense) {
 
     countExpenseItems(expenseItems);
     countTotalExpense();
+    formClear();
   } catch (err) {
     alert("Deu erro.");
     console.log(err);
@@ -121,8 +122,6 @@ function removeItem(element) {
 }
 
 function deductRemoveItem(total, deduction) {
-  const newTotal = total - deduction;
-
   symbolBrl.innerText = "R$";
 
   expensesTotal.innerHTML = "";
@@ -133,3 +132,9 @@ document.addEventListener("DOMContentLoaded", () => {
   countExpenseItems(expenseItems);
   countTotalExpense();
 });
+
+function formClear () {
+  amount.value = ''
+  category.value = ''
+  expense.value = ''
+}

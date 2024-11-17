@@ -137,4 +137,6 @@ function formClear () {
   amount.value = ''
   category.value = ''
   expense.value = ''
+
+  expense.focus()
 }

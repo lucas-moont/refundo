@@ -2,9 +2,8 @@ const form = document.querySelector("form");
 const amount = document.querySelector("#amount");
 const expense = document.querySelector("#expense");
 const category = document.querySelector("#category");
-const expenseItems = document.querySelector('ul')
-let total = 0
-
+const expenseItems = document.querySelector("ul");
+let total = 0;
 
 amount.addEventListener("input", () => {
   let value = amount.value.replace(/\D*/g, "");
@@ -36,41 +35,46 @@ form.addEventListener("submit", (e) => {
     created_at: new Date(),
   };
 
-  expenseAdd(newExpense)
+  expenseAdd(newExpense);
 });
 
 function expenseAdd(newExpense) {
   try {
-    const li = document.createElement('li')
-    const categoryImg = document.createElement('img')
-    const expenseInfo = document.createElement('div')
-    const removeIcon = document.createElement('img')
-    const expenseInfoName = document.createElement('strong')
-    const expenseInfoCategory = document.createElement('span')
-    const expenseAmount = document.createElement('span')
-    
-    categoryImg.setAttribute('src', `./img/${newExpense.category.id}.svg`)
-    categoryImg.setAttribute('alt', `${newExpense.category.name}`)
+    const li = document.createElement("li");
+    const categoryImg = document.createElement("img");
+    const expenseInfo = document.createElement("div");
+    const removeIcon = document.createElement("img");
+    const expenseInfoName = document.createElement("strong");
+    const expenseInfoCategory = document.createElement("span");
+    const expenseAmount = document.createElement("span");
 
-    expenseInfoName.innerHTML = `${newExpense.expense}`
-    expenseInfoCategory.innerHTML = `${newExpense.category.name}`
+    categoryImg.setAttribute("src", `./img/${newExpense.category.id}.svg`);
+    categoryImg.setAttribute("alt", `${newExpense.category.name}`);
 
-    expenseInfo.classList.add('expense-info')
-    expenseInfo.append(expenseInfoName, expenseInfoCategory)
+    expenseInfoName.innerHTML = `${newExpense.expense}`;
+    expenseInfoCategory.innerHTML = `${newExpense.category.name}`;
 
-    expenseAmount.classList.add('expense-amount')
-    expenseAmount.innerHTML = `<small>R$</small>${newExpense.amount.replace('R$ ', '')}`
-    
-    removeIcon.src = './img/remove.svg'
-    removeIcon.classList.add('remove-icon')
+    expenseInfo.classList.add("expense-info");
+    expenseInfo.append(expenseInfoName, expenseInfoCategory);
 
-    li.classList.add('expense')
-    li.append(categoryImg, expenseInfo, expenseAmount, removeIcon)    
-    expenseItems.append(li)
+    expenseAmount.classList.add("expense-amount");
+    expenseAmount.innerHTML = `<small>R$</small>${newExpense.amount.replace(
+      "R$ ",
+      ""
+    )}`;
 
-    countExpenseItems(expenseItems)
-    countTotalExpense()
+    removeIcon.src = "./img/remove.svg";
+    removeIcon.classList.add("remove-icon");
+    removeIcon.addEventListener("click", (e) => {
+      removeItem(e.target);
+    });
 
+    li.classList.add("expense");
+    li.append(categoryImg, expenseInfo, expenseAmount, removeIcon);
+    expenseItems.append(li);
+
+    countExpenseItems(expenseItems);
+    countTotalExpense();
   } catch (err) {
     alert("Deu erro.");
     console.log(err);
@@ -78,32 +82,54 @@ function expenseAdd(newExpense) {
 }
 
 function countExpenseItems(expenseItemsList) {
-  const numberOfItems = expenseItemsList.querySelectorAll('li').length
-  document.querySelector('aside header p span').innerHTML = `${numberOfItems} despesas`
+  const numberOfItems = expenseItemsList.querySelectorAll("li").length;
+  document.querySelector(
+    "aside header p span"
+  ).innerHTML = `${numberOfItems} despesas`;
 }
 
-function countTotalExpense(){
-  const expenseAmountArray = document.querySelectorAll('.expense-amount')
-  expenseAmountArray.forEach(item => {
-    let parcela = item.innerText
-    parcela = parcela.replace(/\D*/g, "");
-    
-    parcela = Number(parcela) / 100
+function countTotalExpense() {
+  total = 0;
+  const expenseAmountArray = document.querySelectorAll(".expense-amount");
+  if (expenseAmountArray.length > 0) {
+    expenseAmountArray.forEach((item) => {
+      let parcela = item.innerText;
+      parcela = parcela.replace(/\D*/g, "");
 
-    total = total + parcela
-  })
+      parcela = Number(parcela) / 100;
 
-  const symbolBrl = document.createElement('small')
-  symbolBrl.innerText = 'R$'
+      total = total + parcela;
+    });
+  }
 
-  total = formatCurrencyBrl(total).toUpperCase().replace('R$', '')
+  const symbolBrl = document.createElement("small");
+  symbolBrl.innerText = "R$";
 
-  const expensesTotal = document.querySelector('.expenses-total')
-  expensesTotal.innerHTML = ''
-  expensesTotal.append(symbolBrl, total)
+  let totalToString = formatCurrencyBrl(total).toUpperCase().replace("R$", "");
+
+  const expensesTotal = document.querySelector(".expenses-total");
+  expensesTotal.innerHTML = "";
+  expensesTotal.append(symbolBrl, totalToString);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  countExpenseItems(expenseItems)
-  countTotalExpense()
-})
+function removeItem(element) {
+  const expenseParent = element.closest(".expense");
+
+  expenseParent.remove();
+
+  countTotalExpense();
+}
+
+function deductRemoveItem(total, deduction) {
+  const newTotal = total - deduction;
+
+  symbolBrl.innerText = "R$";
+
+  expensesTotal.innerHTML = "";
+  expensesTotal.append(symbolBrl, total);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  countExpenseItems(expenseItems);
+  countTotalExpense();
+});
